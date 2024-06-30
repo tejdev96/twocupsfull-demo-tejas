@@ -7,6 +7,7 @@ Welcome to the documentation.
    :maxdepth: 2
    :caption: Contents:
 
+   requirements.rst
    install.rst
    build.rst
    artifact.rst

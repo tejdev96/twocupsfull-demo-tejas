@@ -2,11 +2,6 @@ Install
 =======
 
 
-Install Virtual Environment
----------------------------
-
-Install virtualenv from [here](https://virtualenv.pypa.io/en/latest/installation.html)
-
 Create Virtual Environment
 --------------------------
 
@@ -18,7 +13,7 @@ Create Virtual Environment
 - Create a virtual env
 
   .. code-block:: shell
-    
+
      virtualenv -p python3.9 venv-test
 
 - Activate virtualenv
@@ -30,5 +25,5 @@ Create Virtual Environment
 - Install requirements
 
   .. code-block:: shell
-    
+
      pip install -r requirements.txt
