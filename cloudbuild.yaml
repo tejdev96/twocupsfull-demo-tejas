@@ -1,33 +1,26 @@
 steps:
-  - name: 'gcr.io/cloud-builders/git'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Cloning repository..."
-        git clone https://github.com/tejdev96/twocupsfull-demo-tejas.git
-        cd twocupsfull-demo-tejas
-        git checkout ${_BRANCH}
-        echo "Repository cloned and checked out to branch ${_BRANCH}."
-
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Defining source and destination directories..."
-        IFS=',' read -r -a source_dirs <<< "${_SOURCE_DIR}"
-        IFS=',' read -r -a dest_dirs <<< "${_DEST_DIR}"
-        
-        echo "Source directories: ${source_dirs[@]}"
-        echo "Destination directories: ${dest_dirs[@]}"
-
-        for i in "${!source_dirs[@]}"; do
-          src_dir="${source_dirs[$i]}"
-          dest_dir="${dest_dirs[$i]}"
-          echo "Copying from ${_REPO_DIR}/${src_dir} to gs://${_GCS_BUCKET}/${dest_dir}"
-          gsutil -m cp -r "${_REPO_DIR}/${src_dir}*" "gs://${_GCS_BUCKET}/${dest_dir}"
-        done
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone', 'https://github.com/tejdev96/twocupsfull-demo-tejas.git']
+  dir: /workspace
+- name: 'gcr.io/cloud-builders/git'
+  args: ['checkout', 'dev']
+  dir: /workspace/twocupsfull-demo-tejas
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: bash
+  args:
+  - '-c'
+  - |
+    echo "Defining source and destination directories..."
+    SOURCE_DIR="app"
+    DEST_DIR="Tejas"
+    echo "Source directory: ${SOURCE_DIR}"
+    echo "Destination directory: ${DEST_DIR}"
+    echo "Listing contents of /workspace/twocupsfull-demo-tejas"
+    ls /workspace/twocupsfull-demo-tejas
+    echo "Listing contents of /workspace/twocupsfull-demo-tejas/${SOURCE_DIR}"
+    ls /workspace/twocupsfull-demo-tejas/${SOURCE_DIR}
+    echo "Copying from /workspace/twocupsfull-demo-tejas/${SOURCE_DIR} to gs://${_GCS_BUCKET}/${DEST_DIR}"
+    gsutil cp -r /workspace/twocupsfull-demo-tejas/${SOURCE_DIR} gs://${_GCS_BUCKET}/${DEST_DIR}
 
 options:
   logging: CLOUD_LOGGING_ONLY
