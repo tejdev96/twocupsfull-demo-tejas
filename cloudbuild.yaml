@@ -1,10 +1,32 @@
 steps:
-- name: 'gcr.io/cloud-builders/gsutil'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    gsutil cp -r app gs://test-bucket-one-1/Tejas/Local
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        git clone https://github.com/tejdev96/twocupsfull-demo-tejas.git /workspace/source
+        cd /workspace/source
+        git fetch origin $BRANCH
+        git checkout $BRANCH
+        git pull origin $BRANCH
+        changed_files=$(git diff-tree --no-commit-id --name-only -r $COMMIT_SHA)
+        echo "Changed files: $changed_files"
+        
+        if [ -z "$changed_files" ]; then
+          echo "No changed files detected."
+        else
+          echo "Copying changed files..."
+          for file in $changed_files; do
+            gsutil cp $file gs://${_GCS_BUCKET}/${_DEST_DIR}/${file}
+          done
+        fi
+
+substitutions:
+  _GCS_BUCKET: test-bucket-1-one
+  _BRANCH: dev
+  _DEST_DIR: Tejas
+  _REPO_DIR: /workspace/tejdev96/twocupsfull-demo-tejas
+  _SOURCE_DIR: app
 
 options:
   logging: CLOUD_LOGGING_ONLY
