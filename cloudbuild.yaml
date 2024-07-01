@@ -9,9 +9,8 @@ steps:
         git fetch origin ${_BRANCH}
         git checkout ${_BRANCH}
         git pull origin ${_BRANCH}
-        changed_files=$(git diff-tree --no-commit-id --name-only -r ${COMMIT_SHA})
+        changed_files=$(git diff-tree --no-commit-id --name-only -r ${_COMMIT_ID})
         echo "Changed files: $changed_files"
-
         if [ -z "$changed_files" ]; then
           echo "No changed files detected."
         else
@@ -24,9 +23,10 @@ steps:
         fi
 
 substitutions:
-  _GCS_BUCKET: test-bucket-1-one
   _BRANCH: dev
+  _COMMIT_ID: ${COMMIT_SHA}
   _DEST_DIR: Tejas
+  _GCS_BUCKET: test-bucket-1-one
   _REPO_DIR: /workspace/tejdev96/twocupsfull-demo-tejas
   _SOURCE_DIR: app
 
