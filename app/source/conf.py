@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 """
-test run ongoing for cloud triggers run 08
+test run ongoing for cloud triggers run 09
 """
 project = "twocupsfull"
 copyright = "2024, twocupsfull"
