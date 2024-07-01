@@ -10,13 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Authenticate to GCP
+        id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
       - name: Trigger Cloud Build
         env:
           PROJECT_ID: eastern-concord-396814
           TRIGGER_ID: 8f2f31a4-ebe9-4a64-a93c-7520edd0568c
-          ACCESS_TOKEN: ${{ secrets.GCP_SA_KEY }}  # Replace with your GCP service account token
+          BRANCH_NAME: ${{ github.ref_name }}
         run: |
+          ACCESS_TOKEN=$(gcloud auth print-access-token)
           curl -X POST -H "Content-Type: application/json" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
-            -d '{"branchName": "${{ github.ref }}"}' \
+            -d '{"branchName": "'"$BRANCH_NAME"'"}' \
             "https://cloudbuild.googleapis.com/v1/projects/$PROJECT_ID/triggers/$TRIGGER_ID:run"
