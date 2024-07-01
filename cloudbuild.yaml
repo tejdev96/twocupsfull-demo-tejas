@@ -31,7 +31,7 @@ substitutions:
   _BRANCH: dev
   _COMMIT_ID: ${COMMIT_SHA}
   _DEST_DIR: Tejas
-  _GCS_BUCKET: test-bucket-1-one
+  _GCS_BUCKET: test-bucket-one-1
   _REPO_DIR: /workspace/tejdev96/twocupsfull-demo-tejas
   _SOURCE_DIR: app
 
