@@ -6,18 +6,20 @@ steps:
       - |
         git clone https://github.com/tejdev96/twocupsfull-demo-tejas.git /workspace/source
         cd /workspace/source
-        git fetch origin $BRANCH
-        git checkout $BRANCH
-        git pull origin $BRANCH
-        changed_files=$(git diff-tree --no-commit-id --name-only -r $COMMIT_SHA)
+        git fetch origin ${_BRANCH}
+        git checkout ${_BRANCH}
+        git pull origin ${_BRANCH}
+        changed_files=$(git diff-tree --no-commit-id --name-only -r ${COMMIT_SHA})
         echo "Changed files: $changed_files"
-        
+
         if [ -z "$changed_files" ]; then
           echo "No changed files detected."
         else
           echo "Copying changed files..."
           for file in $changed_files; do
-            gsutil cp $file gs://${_GCS_BUCKET}/${_DEST_DIR}/${file}
+            dest_path="gs://${_GCS_BUCKET}/${_DEST_DIR}/${file}"
+            echo "Copying $file to $dest_path"
+            gsutil cp $file $dest_path
           done
         fi
 
@@ -30,4 +32,3 @@ substitutions:
 
 options:
   logging: CLOUD_LOGGING_ONLY
-
