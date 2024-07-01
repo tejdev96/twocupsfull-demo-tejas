@@ -1,0 +1,29 @@
+steps:
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        git clone https://github.com/tejdev96/twocupsfull-demo-tejas.git
+        cd your-project
+        git checkout ${_BRANCH}
+        
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        # Define an array of source and destination directories
+        IFS=',' read -r -a source_dirs <<< "${_SOURCE_DIR}"
+        IFS=',' read -r -a dest_dirs <<< "${_DEST_DIR}"
+        
+        # Loop through each source and destination directory pair and copy files to GCS
+        for i in "${!source_dirs[@]}"; do
+          src_dir="${source_dirs[$i]}"
+          dest_dir="${dest_dirs[$i]}"
+          gsutil -m cp -r "${_REPO_DIR}/${src_dir}*" "gs://${_GCS_BUCKET}/${dest_dir}"
+        done
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
