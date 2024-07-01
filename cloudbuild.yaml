@@ -4,23 +4,28 @@ steps:
     args:
       - '-c'
       - |
+        echo "Cloning repository..."
         git clone https://github.com/tejdev96/twocupsfull-demo-tejas.git
-        cd your-project
+        cd twocupsfull-demo-tejas
         git checkout ${_BRANCH}
-        
+        echo "Repository cloned and checked out to branch ${_BRANCH}."
+
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        # Define an array of source and destination directories
+        echo "Defining source and destination directories..."
         IFS=',' read -r -a source_dirs <<< "${_SOURCE_DIR}"
         IFS=',' read -r -a dest_dirs <<< "${_DEST_DIR}"
         
-        # Loop through each source and destination directory pair and copy files to GCS
+        echo "Source directories: ${source_dirs[@]}"
+        echo "Destination directories: ${dest_dirs[@]}"
+
         for i in "${!source_dirs[@]}"; do
           src_dir="${source_dirs[$i]}"
           dest_dir="${dest_dirs[$i]}"
+          echo "Copying from ${_REPO_DIR}/${src_dir} to gs://${_GCS_BUCKET}/${dest_dir}"
           gsutil -m cp -r "${_REPO_DIR}/${src_dir}*" "gs://${_GCS_BUCKET}/${dest_dir}"
         done
 
