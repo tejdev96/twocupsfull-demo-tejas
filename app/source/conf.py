@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 """
-This is a testing run 05 for cloud build triggers
+test run for cloud triggers
 """
 project = "twocupsfull"
 copyright = "2024, twocupsfull"
