@@ -4,21 +4,26 @@ steps:
     args:
       - '-c'
       - |
+        set -e
+        echo "Cloning repository..."
         git clone https://github.com/tejdev96/twocupsfull-demo-tejas.git /workspace/source
         cd /workspace/source
+        echo "Fetching branch ${_BRANCH}..."
         git fetch origin ${_BRANCH}
+        echo "Checking out branch ${_BRANCH}..."
         git checkout ${_BRANCH}
         git pull origin ${_BRANCH}
+        echo "Determining changed files for commit ${_COMMIT_ID}..."
         changed_files=$(git diff-tree --no-commit-id --name-only -r ${_COMMIT_ID})
         echo "Changed files: $changed_files"
         if [ -z "$changed_files" ]; then
           echo "No changed files detected."
         else
-          echo "Copying changed files..."
+          echo "Copying changed files to GCS..."
           for file in $changed_files; do
             dest_path="gs://${_GCS_BUCKET}/${_DEST_DIR}/${file}"
             echo "Copying $file to $dest_path"
-            gsutil cp $file $dest_path
+            gsutil cp $file $dest_path || { echo "Failed to copy $file to $dest_path"; exit 1; }
           done
         fi
 
