@@ -1,7 +1,7 @@
 Artifact
 ========
 """
-This is a second test run for cloud build !
+This is a third test run for cloud build !
 """
 
 Built artifacts can be found at `${REPO_ROOT}/app/build/html/`. 
